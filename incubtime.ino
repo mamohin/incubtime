@@ -114,7 +114,6 @@ void setup() {
     sensors.setResolution(tempDeviceAddress, resolution);
     delay(1000);
     sensors.requestTemperatures();
-    // Serial.begin(9600);
     GPS.begin(9600);
     targetTime = millis() + 16000;
     LCD.InitLCD(120);          //запуск LCD контраст
@@ -171,9 +170,11 @@ void loop() {
                         LCD.invertText(0);
                         LCD.print("JNPDJY", LEFT, st2);
                         LCD.print(" J<{JL", LEFT, st3);
+                        LCD.print("  ntvg", LEFT, st4);
                         LCD.setFont(SmallFont);
                         LCD.print(":", 62, st2);
                         LCD.print(":", 62, st3);
+                        LCD.print(":", 36, st4);
                         LCD.setFont(RusFont);
                         vrs();
                         dd0 = dd;
@@ -191,18 +192,18 @@ void loop() {
                         delay(50);
                         temperature = sensors.getTempCByIndex(0);
                         LCD.setFont(SmallFont);
-                        LCD.print(String(temperature) + "~", CENTER, st4);
+                        LCD.print(String(temperature) + "~", 48, st4);
                         LCD.setFont(RusFont);
                         timez = print_z();
                         if (timez != timez0) {
-                            beep(500, 8);
+                            beep(500, 8, 1);
                             timez0 = timez;
                         }
                         timeo = print_o();
-//                        if (timeo != timeo0) {
-//                            beep(100, 20);
-//                            timeo0 = timeo;
-//                        }
+                        if (timeo != timeo0) {
+                            beep(100, 20, 0);
+                            timeo0 = timeo;
+                        }
                         mm0 = mm;
                     }
 
@@ -310,13 +311,13 @@ void vrs() {
     LCD.invertText(0);
 }
 
-void beep(int b, byte i1) {
+void beep(int b, byte i1, boolean t) {
     for (byte i = 0; i < i1; i++) {
-        digitalWrite(zzz, HIGH);
+        if (t) digitalWrite(zzz, HIGH);
         analogWrite(blight, 0);
         delay(b);
         analogWrite(blight, 160);
-        digitalWrite(zzz, LOW);
+        if (t) digitalWrite(zzz, LOW);
         delay(b);
     }
     delay(b);
